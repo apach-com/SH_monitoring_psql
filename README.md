@@ -473,8 +473,11 @@ sudo ./install_SH.sh
 
 ---
 
-## Мониторинг отлажен на сервере msc-co-sql-04v
+## Лицензия / License
 
-## 👤 Автор
+Проект предоставляется «как есть», без каких-либо гарантий. 
+Используйте на свой страх и риск.
 
-Шаблон разработан для комплексного мониторинга PostgreSQL в production-среде.
+This project is provided "as-is", without warranty of any kind. 
+Use at your own risk.
+

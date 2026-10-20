@@ -1,0 +1,550 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<zabbix_export>
+    <version>7.4</version>
+    <template_groups>
+        <template_group>
+            <uuid>24f8fdbdd24c4cbf87eeec0f9b1c00a2</uuid>
+            <name>Templates/Databases</name>
+        </template_group>
+    </template_groups>
+    <templates>
+        <template>
+            <uuid>110e8d738f474e638a0d8ecb65f9dbde</uuid>
+            <template>SH PostgreSQL Custom Monitoring</template>
+            <name>SH PostgreSQL Custom Monitoring</name>
+            <description>Комплексный мониторинг PostgreSQL: cache hit ratio, ожидания, параметры конфигурации, WAL, VACUUM, репликация, размер БД</description>
+            <groups>
+                <group>
+                    <name>Templates/Databases</name>
+                </group>
+            </groups>
+            <items>
+                <item>
+                    <uuid>5e6f7a8b9c0d4e1f8a3bc4d5e6f7a8b9</uuid>
+                    <name>SH PostgreSQL: archive_mode</name>
+                    <key>pg.show[archive_mode]</key>
+                    <delay>6h</delay>
+                    <value_type>TEXT</value_type>
+                    <description>Режим архивации WAL (off, on, always)</description>
+                </item>
+                <item>
+                    <uuid>e577512dd3214a7dae27510ff571e638</uuid>
+                    <name>SH PostgreSQL: autovacuum_max_workers</name>
+                    <key>pg.show[autovacuum_max_workers]</key>
+                    <delay>6h</delay>
+                    <value_type>FLOAT</value_type>
+                    <description>Максимум воркеров autovacuum</description>
+                </item>
+                <item>
+                    <uuid>5160b22e4e9042789607765c09627119</uuid>
+                    <name>SH PostgreSQL: autovacuum_work_mem</name>
+                    <key>pg.show[autovacuum_work_mem]</key>
+                    <delay>6h</delay>
+                    <value_type>FLOAT</value_type>
+                    <units>MB</units>
+                    <description>Память на воркер autovacuum (MB)</description>
+                    <triggers>
+                        <trigger>
+                            <uuid>30c12c4e0c7e4fbd98fce6e69f0d33f2</uuid>
+                            <expression>last(/SH PostgreSQL Custom Monitoring/pg.show[autovacuum_work_mem])&lt;{$PG.AUTOVACUUM_MEM.MIN}</expression>
+                            <name>PostgreSQL: autovacuum_work_mem слишком мал ({ITEM.LASTVALUE})</name>
+                            <priority>WARNING</priority>
+                            <description>autovacuum_work_mem ниже {$PG.AUTOVACUUM_MEM.MIN} MB.</description>
+                        </trigger>
+                    </triggers>
+                </item>
+                <item>
+                    <uuid>1a2b3c4d5e6f4a7b8c9de0f1a2b3c4d5</uuid>
+                    <name>SH PostgreSQL: checkpoint_completion_target</name>
+                    <key>pg.show[checkpoint_completion_target]</key>
+                    <delay>6h</delay>
+                    <value_type>FLOAT</value_type>
+                    <description>Доля интервала checkpoint для завершения записи</description>
+                </item>
+                <item>
+                    <uuid>9dfa6afd50bf4c0eabb1c5046701f013</uuid>
+                    <name>SH PostgreSQL: effective_cache_size</name>
+                    <key>pg.show[effective_cache_size]</key>
+                    <delay>6h</delay>
+                    <value_type>FLOAT</value_type>
+                    <units>MB</units>
+                    <description>Оценка размера кэша ОС (MB)</description>
+                </item>
+                <item>
+                    <uuid>6f7a8b9c0d1e4f2a9b4cd5e6f7a8b9c0</uuid>
+                    <name>SH PostgreSQL: effective_io_concurrency</name>
+                    <key>pg.show[effective_io_concurrency]</key>
+                    <delay>6h</delay>
+                    <value_type>FLOAT</value_type>
+                    <description>Количество одновременных IO операций</description>
+                </item>
+                <item>
+                    <uuid>8b9c0d1e2f3a4b4c8d6ef7a8b9c0d1e2</uuid>
+                    <name>SH PostgreSQL: lock_timeout</name>
+                    <key>pg.show[lock_timeout]</key>
+                    <delay>6h</delay>
+                    <value_type>FLOAT</value_type>
+                    <units>s</units>
+                    <description>Таймаут ожидания блокировки (мс)</description>
+                </item>
+                <item>
+                    <uuid>625eefa3398848078c12d6f338e2683f</uuid>
+                    <name>SH PostgreSQL: maintenance_work_mem</name>
+                    <key>pg.show[maintenance_work_mem]</key>
+                    <delay>6h</delay>
+                    <value_type>FLOAT</value_type>
+                    <units>MB</units>
+                    <description>Память для VACUUM, CREATE INDEX (MB)</description>
+                </item>
+                <item>
+                    <uuid>5c634c37b137415e87bccdc3cf587ed0</uuid>
+                    <name>SH PostgreSQL: max_connections</name>
+                    <key>pg.show[max_connections]</key>
+                    <delay>6h</delay>
+                    <value_type>FLOAT</value_type>
+                    <description>Максимум подключений</description>
+                    <triggers>
+                        <trigger>
+                            <uuid>c8c6fe9e6f4b453ba99f549e0eac73f0</uuid>
+                            <expression>last(/SH PostgreSQL Custom Monitoring/pg.show[max_connections])&gt;{$PG.MAX_CONN.MAX}</expression>
+                            <name>PostgreSQL: max_connections слишком велик ({ITEM.LASTVALUE})</name>
+                            <priority>WARNING</priority>
+                            <description>max_connections &gt; {$PG.MAX_CONN.MAX}. Рекомендуется pgbouncer.</description>
+                        </trigger>
+                    </triggers>
+                </item>
+                <item>
+                    <uuid>d18156c1115248409f577a5af6718bab</uuid>
+                    <name>SH PostgreSQL: max_parallel_workers_per_gather</name>
+                    <key>pg.show[max_parallel_workers_per_gather]</key>
+                    <delay>6h</delay>
+                    <value_type>FLOAT</value_type>
+                    <description>Параллельных воркеров на Gather</description>
+                </item>
+                <item>
+                    <uuid>4d5e6f7a8b9c4d0ebf2ab3c4d5e6f7a8</uuid>
+                    <name>SH PostgreSQL: max_replication_slots</name>
+                    <key>pg.show[max_replication_slots]</key>
+                    <delay>6h</delay>
+                    <value_type>FLOAT</value_type>
+                    <description>Максимум слотов репликации</description>
+                </item>
+                <item>
+                    <uuid>3c4d5e6f7a8b4c9dae1fa2b3c4d5e6f7</uuid>
+                    <name>SH PostgreSQL: max_wal_senders</name>
+                    <key>pg.show[max_wal_senders]</key>
+                    <delay>6h</delay>
+                    <value_type>FLOAT</value_type>
+                    <description>Максимум подключений для репликации</description>
+                </item>
+                <item>
+                    <uuid>a1b2c3d4e5f64a7b8c9de0f1a2b3c4d5</uuid>
+                    <name>SH PostgreSQL: max_wal_size</name>
+                    <key>pg.show[max_wal_size]</key>
+                    <delay>6h</delay>
+                    <value_type>FLOAT</value_type>
+                    <units>MB</units>
+                    <description>Максимальный размер WAL до checkpoint (MB)</description>
+                </item>
+                <item>
+                    <uuid>c17e41a53bb64f788ed891770b4b0384</uuid>
+                    <name>SH PostgreSQL: max_worker_processes</name>
+                    <key>pg.show[max_worker_processes]</key>
+                    <delay>6h</delay>
+                    <value_type>FLOAT</value_type>
+                    <description>Максимум фоновых процессов</description>
+                </item>
+                <item>
+                    <uuid>fbbcbde541114c85b1c4bc8cbaec6b26</uuid>
+                    <name>SH PostgreSQL: shared_buffers</name>
+                    <key>pg.show[shared_buffers]</key>
+                    <delay>6h</delay>
+                    <value_type>FLOAT</value_type>
+                    <units>MB</units>
+                    <description>Размер shared buffers (MB). Рекомендуется 25% от RAM.</description>
+                    <triggers>
+                        <trigger>
+                            <uuid>d9cabfb211f94beb98d4091226171363</uuid>
+                            <expression>last(/SH PostgreSQL Custom Monitoring/pg.show[shared_buffers])&lt;{$PG.SHARED_BUFFERS.MIN}</expression>
+                            <name>PostgreSQL: shared_buffers слишком мал ({ITEM.LASTVALUE})</name>
+                            <priority>WARNING</priority>
+                            <description>shared_buffers ниже {$PG.SHARED_BUFFERS.MIN} MB.</description>
+                        </trigger>
+                    </triggers>
+                </item>
+                <item>
+                    <uuid>7a8b9c0d1e2f4a3bac5de6f7a8b9c0d1</uuid>
+                    <name>SH PostgreSQL: statement_timeout</name>
+                    <key>pg.show[statement_timeout]</key>
+                    <delay>6h</delay>
+                    <value_type>FLOAT</value_type>
+                    <units>s</units>
+                    <description>Таймаут выполнения запросов (мс)</description>
+                </item>
+                <item>
+                    <uuid>13e3bc6ff2874a4eaa6a7b9ba1b370c7</uuid>
+                    <name>SH PostgreSQL: wal_buffers</name>
+                    <key>pg.show[wal_buffers]</key>
+                    <delay>6h</delay>
+                    <value_type>FLOAT</value_type>
+                    <units>MB</units>
+                    <description>Буфер WAL (MB)</description>
+                </item>
+                <item>
+                    <uuid>2b3c4d5e6f7a4b8c9d0ef1a2b3c4d5e6</uuid>
+                    <name>SH PostgreSQL: wal_level</name>
+                    <key>pg.show[wal_level]</key>
+                    <delay>6h</delay>
+                    <value_type>TEXT</value_type>
+                    <description>Уровень детализации WAL (minimal, replica, logical)</description>
+                </item>
+                <item>
+                    <uuid>cac9214ddb6f434b84b6cf2510e74895</uuid>
+                    <name>SH PostgreSQL: work_mem</name>
+                    <key>pg.show[work_mem]</key>
+                    <delay>6h</delay>
+                    <value_type>FLOAT</value_type>
+                    <units>MB</units>
+                    <description>Память на операцию сортировки (MB)</description>
+                    <triggers>
+                        <trigger>
+                            <uuid>c72ac777c1de491582be33f68905e67b</uuid>
+                            <expression>last(/SH PostgreSQL Custom Monitoring/pg.show[work_mem])&lt;{$PG.WORK_MEM.MIN}</expression>
+                            <name>PostgreSQL: work_mem слишком мал ({ITEM.LASTVALUE})</name>
+                            <priority>WARNING</priority>
+                            <description>work_mem ниже {$PG.WORK_MEM.MIN} MB.</description>
+                        </trigger>
+                    </triggers>
+                </item>
+                <item>
+                    <uuid>d4e5f6a7b8c94d0ebf2ab3c4d5e6f7a8</uuid>
+                    <name>SH PostgreSQL: Active VACUUM count</name>
+                    <key>pg.vacuum[count]</key>
+                    <delay>5m</delay>
+                    <value_type>FLOAT</value_type>
+                    <description>Количество одновременно идущих процессов VACUUM</description>
+                    <triggers>
+                        <trigger>
+                            <uuid>e5f6a7b8c9d04e1f8a3bc4d5e6f7a8b9</uuid>
+                            <expression>last(/SH PostgreSQL Custom Monitoring/pg.vacuum[count])&gt;{$PG.VACUUM_COUNT.WARN}</expression>
+                            <name>PostgreSQL: Много активных VACUUM ({ITEM.LASTVALUE})</name>
+                            <priority>WARNING</priority>
+                            <description>Количество активных VACUUM превышает {$PG.VACUUM_COUNT.WARN}.</description>
+                        </trigger>
+                    </triggers>
+                </item>
+                <item>
+                    <uuid>f6a7b8c9d0e14f2a9b4cd5e6f7a8b9c0</uuid>
+                    <name>SH PostgreSQL: Longest VACUUM duration</name>
+                    <key>pg.vacuum[longest]</key>
+                    <delay>5m</delay>
+                    <value_type>FLOAT</value_type>
+                    <units>s</units>
+                    <description>Длительность самого долгого активного VACUUM (сек)</description>
+                    <triggers>
+                        <trigger>
+                            <uuid>a7b8c9d0e1f24a3bac5de6f7a8b9c0d1</uuid>
+                            <expression>last(/SH PostgreSQL Custom Monitoring/pg.vacuum[longest])&gt;{$PG.VACUUM_LONGEST.MAX}</expression>
+                            <name>PostgreSQL: Зависший VACUUM ({ITEM.LASTVALUE} сек)</name>
+                            <priority>HIGH</priority>
+                            <description>Самый долгий VACUUM выполняется более {$PG.VACUUM_LONGEST.MAX} секунд.</description>
+                        </trigger>
+                    </triggers>
+                </item>
+                <item>
+                    <uuid>b2c3d4e5f6a74b8c9d0ef1a2b3c4d5e6</uuid>
+                    <name>SH PostgreSQL: WAL size</name>
+                    <key>pg.wal_size</key>
+                    <delay>5m</delay>
+                    <value_type>FLOAT</value_type>
+                    <units>MB</units>
+                    <description>Общий размер файлов WAL на диске в MB</description>
+                    <triggers>
+                        <trigger>
+                            <uuid>c3d4e5f6a7b84c9dae1fa2b3c4d5e6f7</uuid>
+                            <expression>last(/SH PostgreSQL Custom Monitoring/pg.wal_size)&gt;{$PG.WAL_SIZE.MAX}</expression>
+                            <name>PostgreSQL: WAL size слишком велик ({ITEM.LASTVALUE})</name>
+                            <priority>WARNING</priority>
+                            <description>Размер WAL превышает {$PG.WAL_SIZE.MAX} MB. Проверьте настройки checkpoint и архивации.</description>
+                        </trigger>
+                    </triggers>
+                </item>
+            </items>
+            <discovery_rules>
+                <discovery_rule>
+                    <uuid>000bf00b23d04d72a7d0308eac06359c</uuid>
+                    <name>SH PostgreSQL databases discovery</name>
+                    <key>pg.cache_hit[all]</key>
+                    <delay>1h</delay>
+                    <item_prototypes>
+                        <item_prototype>
+                            <uuid>892f2bbb049c49e4b1794c7e8a030d3a</uuid>
+                            <name>SH Cache Hit Ratio: {#DBNAME}</name>
+                            <key>pg.cache_hit[{#DBNAME}]</key>
+                            <value_type>FLOAT</value_type>
+                            <units>%</units>
+                            <description>Процент попаданий в кэш для базы {#DBNAME}</description>
+                            <trigger_prototypes>
+                                <trigger_prototype>
+                                    <uuid>0466cc47136045098d65ebde21a09258</uuid>
+                                    <expression>last(/SH PostgreSQL Custom Monitoring/pg.cache_hit[{#DBNAME}])&lt;{$PG.CACHE_HIT.HIGH}</expression>
+                                    <name>SH Critical cache hit ratio on {#DBNAME}: {ITEM.LASTVALUE}</name>
+                                    <priority>HIGH</priority>
+                                    <description>Критически низкий cache hit ratio на базе {#DBNAME}.</description>
+                                </trigger_prototype>
+                                <trigger_prototype>
+                                    <uuid>44c63cbbd73e40f08bd23962f6dafa59</uuid>
+                                    <expression>last(/SH PostgreSQL Custom Monitoring/pg.cache_hit[{#DBNAME}])&lt;{$PG.CACHE_HIT.WARN}</expression>
+                                    <name>SH Low cache hit ratio on {#DBNAME}: {ITEM.LASTVALUE}</name>
+                                    <priority>WARNING</priority>
+                                    <description>Cache hit ratio ниже {$PG.CACHE_HIT.WARN}% на базе {#DBNAME}.</description>
+                                </trigger_prototype>
+                            </trigger_prototypes>
+                        </item_prototype>
+                    </item_prototypes>
+                </discovery_rule>
+                <discovery_rule>
+                    <uuid>b8c9d0e1f2a34b4c8d6ef7a8b9c0d1e2</uuid>
+                    <name>SH PostgreSQL wait events discovery</name>
+                    <key>pg.wait_events[all]</key>
+                    <delay>1h</delay>
+                    <item_prototypes>
+                        <item_prototype>
+                            <uuid>cbdcfeedefab4cad8cfca0b1c2d3e4f5</uuid>
+                            <name>SH Idle in Transaction: {#DBNAME}</name>
+                            <key>pg.wait_events[idle_in_tx,{#DBNAME}]</key>
+                            <value_type>FLOAT</value_type>
+                            <description>Неактивных транзакций в {#DBNAME}</description>
+                            <trigger_prototypes>
+                                <trigger_prototype>
+                                    <uuid>dcfeedefabcd4dbe9dfdb1c2d3e4f5a6</uuid>
+                                    <expression>last(/SH PostgreSQL Custom Monitoring/pg.wait_events[idle_in_tx,{#DBNAME}])&gt;{$PG.IDLE_TX.WARN}</expression>
+                                    <name>SH Elevated idle in transaction on {#DBNAME}: {ITEM.LASTVALUE}</name>
+                                    <priority>WARNING</priority>
+                                </trigger_prototype>
+                                <trigger_prototype>
+                                    <uuid>edeffefabcde4ecfaefec2d3e4f5a6b7</uuid>
+                                    <expression>last(/SH PostgreSQL Custom Monitoring/pg.wait_events[idle_in_tx,{#DBNAME}])&gt;{$PG.IDLE_TX.HIGH}</expression>
+                                    <name>SH High idle in transaction on {#DBNAME}: {ITEM.LASTVALUE}</name>
+                                    <priority>HIGH</priority>
+                                </trigger_prototype>
+                            </trigger_prototypes>
+                        </item_prototype>
+                        <item_prototype>
+                            <uuid>fefefbacbcde4fdbafd3d3e4f5a6b7c8</uuid>
+                            <name>SH Total Connections: {#DBNAME}</name>
+                            <key>pg.wait_events[total_conn,{#DBNAME}]</key>
+                            <value_type>FLOAT</value_type>
+                            <description>Всего подключений к {#DBNAME}</description>
+                            <trigger_prototypes>
+                                <trigger_prototype>
+                                    <uuid>efbacbcddefa4aeb8cbae4f5a6b7c8d9</uuid>
+                                    <expression>last(/SH PostgreSQL Custom Monitoring/pg.wait_events[total_conn,{#DBNAME}])&gt;{$PG.TOTAL_CONN.WARN}</expression>
+                                    <name>SH Elevated total connections on {#DBNAME}: {ITEM.LASTVALUE}</name>
+                                    <priority>WARNING</priority>
+                                </trigger_prototype>
+                                <trigger_prototype>
+                                    <uuid>fbacbcdeefab4bfc9dcbf5a6b7c8d9e0</uuid>
+                                    <expression>last(/SH PostgreSQL Custom Monitoring/pg.wait_events[total_conn,{#DBNAME}])&gt;{$PG.TOTAL_CONN.HIGH}</expression>
+                                    <name>SH High total connections on {#DBNAME}: {ITEM.LASTVALUE}</name>
+                                    <priority>HIGH</priority>
+                                </trigger_prototype>
+                            </trigger_prototypes>
+                        </item_prototype>
+                        <item_prototype>
+                            <uuid>c5d6e7f8a9ba4cbdaedfa4b5c6d7e8f9</uuid>
+                            <name>SH Wait IO: {#DBNAME}</name>
+                            <key>pg.wait_events[wait_io,{#DBNAME}]</key>
+                            <value_type>FLOAT</value_type>
+                            <description>Сессий, ожидающих ввода-вывода в {#DBNAME}</description>
+                            <trigger_prototypes>
+                                <trigger_prototype>
+                                    <uuid>d6e7f8a9bacb4dcebfeab5c6d7e8f9a0</uuid>
+                                    <expression>last(/SH PostgreSQL Custom Monitoring/pg.wait_events[wait_io,{#DBNAME}])&gt;{$PG.WAIT_IO.WARN}</expression>
+                                    <name>SH Elevated wait IO on {#DBNAME}: {ITEM.LASTVALUE}</name>
+                                    <priority>WARNING</priority>
+                                </trigger_prototype>
+                                <trigger_prototype>
+                                    <uuid>e7f8a9bacbdc4edf8cffc6d7e8f9a0b1</uuid>
+                                    <expression>last(/SH PostgreSQL Custom Monitoring/pg.wait_events[wait_io,{#DBNAME}])&gt;{$PG.WAIT_IO.HIGH}</expression>
+                                    <name>SH High wait IO on {#DBNAME}: {ITEM.LASTVALUE}</name>
+                                    <priority>HIGH</priority>
+                                </trigger_prototype>
+                            </trigger_prototypes>
+                        </item_prototype>
+                        <item_prototype>
+                            <uuid>c9d0e1f2a3b44c5d8e7fa8b9c0d1e2f3</uuid>
+                            <name>SH Wait Lock: {#DBNAME}</name>
+                            <key>pg.wait_events[wait_lock,{#DBNAME}]</key>
+                            <value_type>FLOAT</value_type>
+                            <description>Сессий, ожидающих блокировки в {#DBNAME}</description>
+                            <trigger_prototypes>
+                                <trigger_prototype>
+                                    <uuid>d0e1f2a3b4c54d6e9f8ab9c0d1e2f3a4</uuid>
+                                    <expression>last(/SH PostgreSQL Custom Monitoring/pg.wait_events[wait_lock,{#DBNAME}])&gt;{$PG.WAIT_LOCK.WARN}</expression>
+                                    <name>SH Elevated wait lock on {#DBNAME}: {ITEM.LASTVALUE}</name>
+                                    <priority>WARNING</priority>
+                                </trigger_prototype>
+                                <trigger_prototype>
+                                    <uuid>e1f2a3b4c5d64e7faa9bc0d1e2f3a4b5</uuid>
+                                    <expression>last(/SH PostgreSQL Custom Monitoring/pg.wait_events[wait_lock,{#DBNAME}])&gt;{$PG.WAIT_LOCK.HIGH}</expression>
+                                    <name>SH High wait lock on {#DBNAME}: {ITEM.LASTVALUE}</name>
+                                    <priority>HIGH</priority>
+                                </trigger_prototype>
+                            </trigger_prototypes>
+                        </item_prototype>
+                        <item_prototype>
+                            <uuid>f2a3b4c5d6e74f8abbacd1e2f3a4b5c6</uuid>
+                            <name>SH Wait LWLock: {#DBNAME}</name>
+                            <key>pg.wait_events[wait_lwlock,{#DBNAME}]</key>
+                            <value_type>FLOAT</value_type>
+                            <description>Сессий, ожидающих легковесных блокировок в {#DBNAME}</description>
+                            <trigger_prototypes>
+                                <trigger_prototype>
+                                    <uuid>a3b4c5d6e7f84a9b8cbde2f3a4b5c6d7</uuid>
+                                    <expression>last(/SH PostgreSQL Custom Monitoring/pg.wait_events[wait_lwlock,{#DBNAME}])&gt;{$PG.WAIT_LWLOCK.WARN}</expression>
+                                    <name>SH Elevated wait LWLock on {#DBNAME}: {ITEM.LASTVALUE}</name>
+                                    <priority>WARNING</priority>
+                                </trigger_prototype>
+                                <trigger_prototype>
+                                    <uuid>b4c5d6e7f8a94bac9dcef3a4b5c6d7e8</uuid>
+                                    <expression>last(/SH PostgreSQL Custom Monitoring/pg.wait_events[wait_lwlock,{#DBNAME}])&gt;{$PG.WAIT_LWLOCK.HIGH}</expression>
+                                    <name>SH High wait LWLock on {#DBNAME}: {ITEM.LASTVALUE}</name>
+                                    <priority>HIGH</priority>
+                                </trigger_prototype>
+                            </trigger_prototypes>
+                        </item_prototype>
+                        <item_prototype>
+                            <uuid>f8a9bacbdced4fea9dffd7e8f9a0b1c2</uuid>
+                            <name>SH Wait Timeout: {#DBNAME}</name>
+                            <key>pg.wait_events[wait_timeout,{#DBNAME}]</key>
+                            <value_type>FLOAT</value_type>
+                            <description>Сессий, ожидающих по таймауту в {#DBNAME}</description>
+                            <trigger_prototypes>
+                                <trigger_prototype>
+                                    <uuid>a9bacbdcfeab4afaaeae8f9a0b1c2d3e</uuid>
+                                    <expression>last(/SH PostgreSQL Custom Monitoring/pg.wait_events[wait_timeout,{#DBNAME}])&gt;{$PG.WAIT_TIMEOUT.WARN}</expression>
+                                    <name>SH Elevated wait timeout on {#DBNAME}: {ITEM.LASTVALUE}</name>
+                                    <priority>WARNING</priority>
+                                </trigger_prototype>
+                                <trigger_prototype>
+                                    <uuid>bacbdcfeefab4bfcbbfbf9a0b1c2d3e4</uuid>
+                                    <expression>last(/SH PostgreSQL Custom Monitoring/pg.wait_events[wait_timeout,{#DBNAME}])&gt;{$PG.WAIT_TIMEOUT.HIGH}</expression>
+                                    <name>SH High wait timeout on {#DBNAME}: {ITEM.LASTVALUE}</name>
+                                    <priority>HIGH</priority>
+                                </trigger_prototype>
+                            </trigger_prototypes>
+                        </item_prototype>
+                    </item_prototypes>
+                </discovery_rule>
+            </discovery_rules>
+            <macros>
+                <macro>
+                    <macro>{$PG.AUTOVACUUM_MEM.MIN}</macro>
+                    <value>100</value>
+                    <description>Минимум autovacuum_work_mem (MB)</description>
+                </macro>
+                <macro>
+                    <macro>{$PG.CACHE_HIT.HIGH}</macro>
+                    <value>90</value>
+                    <description>Порог критической ошибки cache hit ratio (%)</description>
+                </macro>
+                <macro>
+                    <macro>{$PG.CACHE_HIT.WARN}</macro>
+                    <value>95</value>
+                    <description>Порог предупреждения cache hit ratio (%)</description>
+                </macro>
+                <macro>
+                    <macro>{$PG.IDLE_TX.HIGH}</macro>
+                    <value>20</value>
+                    <description>Порог критического числа неактивных транзакций</description>
+                </macro>
+                <macro>
+                    <macro>{$PG.IDLE_TX.WARN}</macro>
+                    <value>5</value>
+                    <description>Порог предупреждения для неактивных транзакций</description>
+                </macro>
+                <macro>
+                    <macro>{$PG.MAX_CONN.MAX}</macro>
+                    <value>500</value>
+                    <description>Максимум max_connections</description>
+                </macro>
+                <macro>
+                    <macro>{$PG.SHARED_BUFFERS.MIN}</macro>
+                    <value>128</value>
+                    <description>Минимум shared_buffers (MB)</description>
+                </macro>
+                <macro>
+                    <macro>{$PG.TOTAL_CONN.HIGH}</macro>
+                    <value>100</value>
+                    <description>Порог критического числа подключений</description>
+                </macro>
+                <macro>
+                    <macro>{$PG.TOTAL_CONN.WARN}</macro>
+                    <value>80</value>
+                    <description>Порог предупреждения для подключений</description>
+                </macro>
+                <macro>
+                    <macro>{$PG.VACUUM_COUNT.WARN}</macro>
+                    <value>5</value>
+                    <description>Порог предупреждения для активных VACUUM</description>
+                </macro>
+                <macro>
+                    <macro>{$PG.VACUUM_LONGEST.MAX}</macro>
+                    <value>3600</value>
+                    <description>Максимальная длительность VACUUM (сек, по умолч. 1 час)</description>
+                </macro>
+                <macro>
+                    <macro>{$PG.WAIT_IO.HIGH}</macro>
+                    <value>100</value>
+                    <description>Порог критического числа IO-ожиданий</description>
+                </macro>
+                <macro>
+                    <macro>{$PG.WAIT_IO.WARN}</macro>
+                    <value>50</value>
+                    <description>Порог предупреждения для IO-ожиданий</description>
+                </macro>
+                <macro>
+                    <macro>{$PG.WAIT_LOCK.HIGH}</macro>
+                    <value>50</value>
+                    <description>Порог критического числа блокировок</description>
+                </macro>
+                <macro>
+                    <macro>{$PG.WAIT_LOCK.WARN}</macro>
+                    <value>20</value>
+                    <description>Порог предупреждения для блокировок</description>
+                </macro>
+                <macro>
+                    <macro>{$PG.WAIT_LWLOCK.HIGH}</macro>
+                    <value>50</value>
+                    <description>Порог критического числа LWLock-ожиданий</description>
+                </macro>
+                <macro>
+                    <macro>{$PG.WAIT_LWLOCK.WARN}</macro>
+                    <value>20</value>
+                    <description>Порог предупреждения для LWLock-ожиданий</description>
+                </macro>
+                <macro>
+                    <macro>{$PG.WAIT_TIMEOUT.HIGH}</macro>
+                    <value>100</value>
+                    <description>Порог критического числа Timeout-ожиданий</description>
+                </macro>
+                <macro>
+                    <macro>{$PG.WAIT_TIMEOUT.WARN}</macro>
+                    <value>50</value>
+                    <description>Порог предупреждения для Timeout-ожиданий</description>
+                </macro>
+                <macro>
+                    <macro>{$PG.WAL_SIZE.MAX}</macro>
+                    <value>10240</value>
+                    <description>Максимальный размер WAL (MB, по умолч. 10 ГБ)</description>
+                </macro>
+                <macro>
+                    <macro>{$PG.WORK_MEM.MIN}</macro>
+                    <value>4</value>
+                    <description>Минимум work_mem (MB)</description>
+                </macro>
+            </macros>
+        </template>
+    </templates>
+</zabbix_export>

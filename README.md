@@ -39,7 +39,6 @@ SH_monitoring_psql/
 | Файл | Где создаётся | Назначение |
 |------|---------------|------------|
 | `.pgpass` | `/etc/zabbix/.pgpass` | Пароль для подключения `zabbix_monitor` к PostgreSQL |
-| `.pgpass.example` | корень репозитория | Шаблон для `.pgpass` (опционально) |
 
 ## 📄 Содержимое `pg_custom.conf`
 

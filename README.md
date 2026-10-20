@@ -1,17 +1,6 @@
 # 📊 SH PostgreSQL Custom Monitoring
 
 Комплексный шаблон мониторинга PostgreSQL для Zabbix 7.4. Позволяет отслеживать ключевые параметры конфигурации, производительность, ожидания, WAL, VACUUM и состояние баз данных через LLD (Low-Level Discovery).
-
-## Копирование проекта.
-
----
-```
-
-git clone https://git.nzmu.ru:8929/infra/SH_monitoring_psql.git
-
-```
-
-
 ---
 
 ##  Структура проекта
